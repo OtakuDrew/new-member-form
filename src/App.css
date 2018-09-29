@@ -1,0 +1,12 @@
+main {
+  margin: 0 auto;
+  background-color: grey;
+}
+.outer {
+  background-color: ghostwhite;
+}
+@media screen and (max-width: 450px) {
+  .outer > form > .form-group > h3 {
+    font-size: 20px;
+  }
+}
