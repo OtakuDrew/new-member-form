@@ -18,14 +18,14 @@ const port = process.env.PORT || 5000;
 // });
 
 app.get("/api", (req, res) => {
-  res.send("Up and running!");
+  res.sendFile(path.join(__dirname, "src/build", "index.html"));
 });
 if (process.env.NODE_ENV === "production") {
   // Serve any static files
   app.use(express.static(path.join(__dirname, "src")));
   // Handle React routing, return all requests to React app
-  app.get("/", function(req, res) {
-    res.sendFile(path.join(__dirname, "src", "components", "member-form.jsx"));
+  app.get("*", function(req, res) {
+    res.sendFile(path.join(__dirname, "src/build", "index.html"));
   });
 }
 
