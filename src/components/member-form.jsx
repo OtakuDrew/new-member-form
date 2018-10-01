@@ -18,7 +18,14 @@ class MemberForm extends Form {
         city: "",
         state: "CA",
         zip: "",
-        find: ""
+        find: "",
+        rec: "",
+        recWeb: "",
+        // id: "",
+        // recImg: "",
+        // selfie: "",
+        instructions: "",
+        condition: ""
       },
       errors: {}
     };
@@ -27,7 +34,23 @@ class MemberForm extends Form {
   }
   //Form Submit Success
   doSubmit = () => {
-    //call the server
+    console.log("starting doSubmit()");
+    const data = { ...this.state.data };
+    const newData = JSON.stringify(data);
+    // const data = new FormData();
+    // Object.keys(this.state.data).map(e => {
+    //   data.append(e, this.state.data[e]);
+    // });
+    console.log(newData);
+    fetch("http://localhost:5000/submit", {
+      method: "POST",
+      body: newData,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      }
+    }).then(response => {
+      console.log(response);
+    });
   };
 
   //Form Validation Schema
@@ -87,15 +110,9 @@ class MemberForm extends Form {
       .min(8)
       .max(40)
       .required(),
-    id: Joi.required(),
-    recImg: Joi.required(),
-    selfie: Joi.required(),
-    instructions: Joi.string()
-      .alphanum()
-      .max(300),
-    condition: Joi.string()
-      .alphanum()
-      .max(300)
+
+    instructions: Joi.string().max(300),
+    condition: Joi.string().max(300)
   };
 
   render() {
@@ -316,6 +333,7 @@ class MemberForm extends Form {
                 cols="10"
                 rows="5"
                 className="form-control"
+                onChange={this.handleChange}
               />
             </div>
           </div>
@@ -332,6 +350,7 @@ class MemberForm extends Form {
                 cols="10"
                 rows="5"
                 className="form-control"
+                onChange={this.handleChange}
               />
             </div>
           </div>

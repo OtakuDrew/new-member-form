@@ -20,6 +20,7 @@ class Form extends Component {
     const error = this.changeValidate(event.currentTarget);
     errors[target] = error;
     this.setState({ data, errors });
+    console.log(this.state.data);
   };
   validate = () => {
     const result = Joi.validate(this.state.data, this.schema, {
@@ -35,10 +36,17 @@ class Form extends Component {
     return Object.keys(errors).length === 0 ? null : errors;
   };
   handleSubmit = event => {
+    console.log("ok");
     event.preventDefault();
+    console.log("ok");
     const errors = this.validate();
+    console.log("ok");
     this.setState({ errors: errors || {} });
+    console.log("ok");
+    console.log(errors);
     if (errors) return;
+    console.log("ok");
+
     this.doSubmit();
   };
   renderButton(label) {
@@ -46,7 +54,7 @@ class Form extends Component {
       <button
         className="btn btn-info btn-lg m-2"
         type="submit"
-        disabled={this.validate()}
+        // disabled={this.validate()}
       >
         {label}
       </button>
