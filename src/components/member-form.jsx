@@ -37,10 +37,6 @@ class MemberForm extends Form {
     console.log("starting doSubmit()");
     const data = { ...this.state.data };
     const newData = JSON.stringify(data);
-    // const data = new FormData();
-    // Object.keys(this.state.data).map(e => {
-    //   data.append(e, this.state.data[e]);
-    // });
     console.log(newData);
     fetch("http://localhost:5000/submit", {
       method: "POST",
@@ -87,7 +83,7 @@ class MemberForm extends Form {
       .required()
       .label("Street"),
     city: Joi.string()
-      .min(5)
+      .min(3)
       .max(20)
       .required()
       .label("City"),
@@ -100,19 +96,18 @@ class MemberForm extends Form {
       .positive()
       .required()
       .label("Zip/Postal"),
-    find: Joi.string(),
     rec: Joi.string()
       .alphanum()
       .min(1)
       .max(40)
       .required(),
     recWeb: Joi.string()
-      .min(8)
+      .min(7)
       .max(40)
       .required(),
-
-    instructions: Joi.string().max(300),
-    condition: Joi.string().max(300)
+    id: Joi.required(),
+    recImg: Joi.required(),
+    selfie: Joi.required()
   };
 
   render() {
@@ -270,7 +265,8 @@ class MemberForm extends Form {
                 onChange={this.handleChange}
                 name="id"
                 type="file"
-                value={this.state.data["id"]}
+                error={this.state.errors["selfie"]}
+                // value={this.state.data["id"]}
               />
             </div>
           </div>
@@ -286,7 +282,8 @@ class MemberForm extends Form {
                 onChange={this.handleChange}
                 name="recImg"
                 type="file"
-                value={this.state.data["recImg"]}
+                error={this.state.errors["selfie"]}
+                // value={this.state.data["recImg"]}
               />
             </div>
           </div>
@@ -310,7 +307,7 @@ class MemberForm extends Form {
                 name="selfie"
                 error={this.state.errors["selfie"]}
                 type="file"
-                value={this.state.data["selfie"]}
+                // value={this.state.data["selfie"]}
               />
             </div>
           </div>
