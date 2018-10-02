@@ -3,12 +3,13 @@ const mysql = require("mysql");
 const app = express();
 const path = require("path");
 const bodyparser = require("body-parser");
+const serverValidate = require("./server-validate");
 const port = process.env.PORT || 5000;
 var connection = mysql.createConnection({
-  host: "localhost",
+  host: "127.0.0.1",
   user: "root",
   password: "password",
-  database: "sampledb"
+  database: "member-schema"
 });
 
 app.use(bodyparser.json({ type: "application/json" }));
@@ -20,42 +21,49 @@ app.use((req, res, next) => {
   );
   next();
 });
-app.get("/api", (req, res) => {
-  res.send("please work");
-});
-app.post("/submit", (req, res, next) => {
-  connection.connect(error => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Connection Established with MySQL.");
 
-      const {
-        first,
-        last,
-        sex,
-        birthdate,
-        email,
-        phone,
-        street,
-        city,
-        state,
-        zip,
-        find,
-        rec,
-        recWeb,
-        instructions,
-        condition
-      } = req.body;
-      const address = street + ", " + city + ", " + state + " " + zip;
-      var sql = `INSERT INTO form (firstName,lastName,sex,birthdate,email,phone,address,find,rec,recWeb,instructions,medCondition) VALUES ('drew','alcazar','male','1998-07-06','drewalcazar23@gmail.com','8','16276 zelzah st granada hills CA 91344','http://google.com','dasda','http://cannamed.com','dsadas','insomnia')`;
-      // ${first},${last},${sex},${birthdate},${email},${phone},${address},${find},${rec},${recWeb},${instructions},${condition}
-      connection.query(sql, (err, result) => {
-        if (err) throw err;
-        console.log("1 record inserted");
-      });
-    }
-  });
+app.post("/submit", (req, res, next) => {
+  console.log(req.body);
+  const validate = serverValidate.formValidate(req.body);
+  console.log(validate);
+  if (validate == null) {
+    connection.connect(error => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Connection Established with MySQL.");
+
+        const {
+          first,
+          last,
+          sex,
+          birthdate,
+          email,
+          phone,
+          street,
+          city,
+          state,
+          zip,
+          find,
+          rec,
+          recWeb,
+          instructions,
+          condition
+        } = req.body;
+        const address = street + " " + city + " " + state + " " + zip;
+
+        var sql = `INSERT INTO newusers (firstName,lastName,sex,birthdate,email,phone,address,find,rec,recWeb,instructions,medCondition) 
+  VALUES ('${first}','${last}','${sex}','${birthdate}','${email}','${phone}','${address}','${find}','${rec}','${recWeb}','${instructions}','${condition}')`;
+        // (${first},${last},${sex},${birthdate},'daman\@gmail.com',${phone},'17432 zelzah st CA 93124',${find},${rec},'http://static.com',${instructions},${condition})
+        connection.query(sql, (err, result) => {
+          if (err) throw err;
+          console.log("1 record inserted");
+        });
+      }
+    });
+  } else {
+    res.send(validate);
+  }
 });
 if (process.env.NODE_ENV === "production") {
   // Serve any static files

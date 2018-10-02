@@ -20,7 +20,6 @@ class Form extends Component {
     const error = this.changeValidate(event.currentTarget);
     errors[target] = error;
     this.setState({ data, errors });
-    console.log(this.state.data);
   };
   validate = () => {
     const result = Joi.validate(this.state.data, this.schema, {
@@ -46,14 +45,15 @@ class Form extends Component {
     console.log(errors);
     if (errors) return;
     console.log("ok");
-
-    this.doSubmit();
+    this.notsubmitted = false;
+    console.log(this.notsubmitted);
   };
   renderButton(label) {
     return (
       <button
         className="btn btn-info btn-lg m-2"
         type="submit"
+        onClick={() => this.notsubmitted !== this.notsubmitted}
         disabled={this.validate()}
       >
         {label}
