@@ -4,7 +4,8 @@ import Input from "./input";
 class Form extends Component {
   state = {
     data: {},
-    errors: {}
+    errors: {},
+    submissionStatus: ""
   };
   changeValidate = ({ name, value }) => {
     const obj = { [name]: value };
@@ -40,11 +41,12 @@ class Form extends Component {
     console.log("ok");
     const errors = this.validate();
     console.log("ok");
-    this.setState({ errors: errors || {} });
+    this.setState({ errors: errors || {}, submissionStatus: "confirm" });
     console.log("ok");
     console.log(errors);
     if (errors) return;
     console.log("ok");
+
     this.notsubmitted = false;
     console.log(this.notsubmitted);
   };
@@ -53,7 +55,7 @@ class Form extends Component {
       <button
         className="btn btn-info btn-lg m-2"
         type="submit"
-        onClick={() => this.notsubmitted !== this.notsubmitted}
+        onClick={() => (this.notsubmitted = false)}
         disabled={this.validate()}
       >
         {label}

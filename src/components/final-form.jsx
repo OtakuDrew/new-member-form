@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 class FinalForm extends Component {
   state = { data: this.props.data };
 

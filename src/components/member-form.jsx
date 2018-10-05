@@ -1,9 +1,8 @@
-import React, { Component } from "react";
-import Input from "./input";
+import React from "react";
 import Joi from "joi-browser";
 import Form from "./form";
 import FinalForm from "./final-form";
-import moment from "moment";
+import ThankYou from "./thank-you";
 
 class MemberForm extends Form {
   constructor(props) {
@@ -29,7 +28,8 @@ class MemberForm extends Form {
         instructions: "",
         condition: ""
       },
-      errors: {}
+      errors: {},
+      submissionStatus: "edit"
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -55,11 +55,10 @@ class MemberForm extends Form {
     });
   };
   changeMode = () => {
-    console.log("ayy");
-    this.notsubmitted = true;
-    console.log(this.notsubmitted);
+    this.setState({ submissionStatus: "edit" });
   };
   handleFinalSubmit = () => {
+    this.setState({ submissionStatus: "submitted" });
     this.doSubmit();
   };
   //Form Validation Schema
@@ -127,14 +126,13 @@ class MemberForm extends Form {
     selfie: Joi.required().label("Selfie"),
     find: Joi.string()
   };
-  notsubmitted = true;
+
   render() {
     const { find } = this.state.data;
-    const { errors } = this.state;
 
-    return (
-      <React.Fragment>
-        {this.notsubmitted && (
+    if (this.state.submissionStatus === "edit") {
+      return (
+        <React.Fragment>
           <form
             style={{ backgroundColor: "ghostwhite", padding: "20px" }}
             onSubmit={this.handleSubmit}
@@ -402,18 +400,20 @@ class MemberForm extends Form {
             </div>
             {this.renderButton("Submit")}
           </form>
-        )}
-
-        {!this.notsubmitted && (
-          <FinalForm
-            handleSubmit={this.handleFinalSubmit}
-            handleEdit={this.changeMode}
-            changeMode={this.changeMode}
-            data={this.state.data}
-          />
-        )}
-      </React.Fragment>
-    );
+        </React.Fragment>
+      );
+    } else if (this.state.submissionStatus === "confirm") {
+      return (
+        <FinalForm
+          handleSubmit={this.handleFinalSubmit}
+          handleEdit={this.changeMode}
+          changeMode={this.changeMode}
+          data={this.state.data}
+        />
+      );
+    } else if (this.state.submissionStatus === "submitted") {
+      return <ThankYou />;
+    }
   }
 }
 
