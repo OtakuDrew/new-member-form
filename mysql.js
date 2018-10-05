@@ -65,14 +65,17 @@ app.post("/submit", (req, res, next) => {
     res.send(validate);
   }
 });
+app.get("/api", (req, res) => {
+  res.send("ok");
+});
 if (process.env.NODE_ENV === "production") {
   // Serve any static files
   app.use((req, res) => {
-    express.static(path.join(__dirname, "build"));
+    express.static(path.join(__dirname, "src/build"));
   });
   // Handle React routing, return all requests to React app
   app.get("*", function(req, res) {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
+    res.sendFile(path.join(__dirname, "src/build", "index.html"));
   });
 }
 
